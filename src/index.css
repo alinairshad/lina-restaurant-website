@@ -60,3 +60,19 @@
     scroll-behavior: auto !important;
   }
 }
+/* Slow, subtle text marquee for the FoodMarquee ticker section.
+   Translates by -50% because the track is duplicated twice — this
+   makes the loop perfectly seamless with no visible jump. */
+@keyframes marquee-text {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-text {
+  animation: marquee-text 32s linear infinite;
+  width: max-content;
+}

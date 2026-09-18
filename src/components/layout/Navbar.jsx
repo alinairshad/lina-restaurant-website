@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Menu, X, Waves } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import Button from '../ui/Button'
+
+const heading = { fontFamily: "'Baloo 2', sans-serif" }
 
 const links = [
   { label: 'Home', to: '/' },
@@ -33,25 +35,33 @@ export default function Navbar() {
   }
 
   return (
+    // top-10 (40px) reduced to top-5 (20px) so the pill sits closer to the
+    // very top of the viewport, giving the Hero content below it a bit
+    // more breathing room.
     <header
-      className={`fixed inset-x-0 top-4 z-50 px-4 transition-all duration-500 sm:px-6 ${
+      className={`fixed inset-x-0 top-5 z-50 px-4 transition-all duration-500 sm:px-6 ${
         scrolled || open ? 'py-3' : 'py-5'
       }`}
     >
-      <nav className="mx-auto flex max-w-3xl items-center justify-between gap-6 rounded-full border border-white/10 bg-ink/30 px-5 py-2.5 shadow-soft backdrop-blur-md sm:gap-8 sm:px-6">
-        <Link to="/" className="flex shrink-0 items-center gap-2.5 text-parchment">
-          <Waves size={20} strokeWidth={1.75} className="text-gold" />
-          <span className="font-display text-[1.3rem] font-medium tracking-[0.04em] text-parchment">Lina</span>
-        </Link>
-
+      {/* Lina wordmark lives in the Hero section now, not here — nav is
+          just links + reserve button. Falling letters/food icons removed
+          from this area too, they only fall in the footer now. */}
+      <nav
+        className={`relative mx-auto flex max-w-3xl items-center justify-between gap-6 rounded-full border px-5 py-2.5 shadow-soft backdrop-blur-md transition-all duration-500 sm:gap-8 sm:px-6 ${
+          scrolled || open
+            ? 'border-white/10 bg-ink/95 shadow-card'
+            : 'border-white/10 bg-ink/30'
+        }`}
+      >
         <div className="hidden items-center gap-6 md:flex">
           {links.map((link) => (
             <NavLink
               key={link.to}
               to={link.to}
               end={link.to === '/'}
+              style={heading}
               className={({ isActive }) =>
-                `group relative pb-1 text-[0.88rem] tracking-wide transition-colors ${
+                `group relative pb-1 text-[0.92rem] font-bold uppercase tracking-wide transition-colors ${
                   isActive ? 'text-parchment' : 'text-parchment/75 hover:text-parchment'
                 }`
               }
@@ -74,7 +84,8 @@ export default function Navbar() {
           <Button
             variant="primary"
             onClick={handleReserve}
-            className="!rounded-full !py-2.5 !px-6 !text-[0.85rem]"
+            style={heading}
+            className="!rounded-full !py-2.5 !px-6 !text-[0.85rem] !font-extrabold !uppercase !tracking-wide"
           >
             Reserve a table
           </Button>
@@ -96,7 +107,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="mx-auto mt-3 max-w-3xl overflow-hidden rounded-3xl border border-white/10 bg-ink/70 shadow-soft backdrop-blur-md md:hidden"
+            className="relative mx-auto mt-3 max-w-3xl overflow-hidden rounded-3xl border border-white/10 bg-ink/95 shadow-soft backdrop-blur-md md:hidden"
           >
             <div className="flex flex-col gap-5 px-6 py-6">
               {links.map((link) => (
@@ -104,8 +115,11 @@ export default function Navbar() {
                   key={link.to}
                   to={link.to}
                   end={link.to === '/'}
+                  style={heading}
                   className={({ isActive }) =>
-                    `text-lg ${isActive ? 'text-gold' : 'text-parchment/85'}`
+                    `text-lg font-bold uppercase tracking-wide ${
+                      isActive ? 'text-gold' : 'text-parchment/85'
+                    }`
                   }
                 >
                   {link.label}
@@ -114,7 +128,8 @@ export default function Navbar() {
               <Button
                 variant="primary"
                 onClick={handleReserve}
-                className="!rounded-full mt-2 w-fit"
+                style={heading}
+                className="!rounded-full mt-2 w-fit !font-extrabold !uppercase !tracking-wide"
               >
                 Reserve a table
               </Button>

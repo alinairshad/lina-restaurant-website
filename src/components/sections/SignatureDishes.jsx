@@ -2,51 +2,51 @@ import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import Button from '../ui/Button'
-import ShapedVideoCard from '../ui/ShapedVideoCard'
 
 const heading = { fontFamily: "'Baloo 2', sans-serif" }
 
-const HERO_DISH = {
-  image:
-    'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1600&auto=format&fit=crop',
-  label: '01',
-  
-  badge: 'bg-[#F4633A] text-[#FBF1E6]',
-  rotate: -1.5,
-  tapeRotate: -6,
-  name: 'Wood-Fired Branzino',
-  description: 'Whole roasted, salsa verde, charred lemon, fennel.',
-  price: 38,
-  cta: 'FIRED TO ORDER',
-  note: 'Best shared. Definitely worth the mess.',
-}
-
-const SIDE_DISHES = [
+const DISHES = [
   {
-    image:
-      'https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?q=80&w=1600&auto=format&fit=crop',
+    video: '/videos/dish-overview.mp4',
+    poster:
+      'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1600&auto=format&fit=crop',
+    label: '01',
+    tag: 'The experience',
+    badge: 'bg-[#F4633A] text-[#FBF1E6]',
+    rotate: -1.25,
+    tapeRotate: -6,
+    name: 'A Taste of Lina',
+    description:
+      'Wood-fired mains, a raw bar built on the morning\u2019s catch, and cocktails poured tableside.',
+    cta: 'EXPLORE THE MENU',
+  },
+  {
+    video: '/videos/dish-biryani.mp4',
+    poster:
+      'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?q=80&w=1600&auto=format&fit=crop',
     label: '02',
     tag: 'Kitchen favorite',
     badge: 'bg-[#C6E86B] text-[#2A1D54]',
-    rotate: 2,
+    rotate: 1.25,
     tapeRotate: 4,
-    name: 'Charred Octopus',
-    description: 'Smoked paprika, crushed potato, salsa verde, lemon oil.',
-    price: 19,
+    name: 'Smoked Chicken Biryani',
+    description: 'Basmati, charred onions, saffron, smoked chicken, mint yogurt.',
+    price: 22,
     cta: 'SEE THE DISH',
   },
   {
-    image:
-      'https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?q=80&w=1600&auto=format&fit=crop',
+    video: '/videos/dish-pasta.mp4',
+    poster:
+      'https://images.unsplash.com/photo-1621996346565-e3dbc353d2e5?q=80&w=1600&auto=format&fit=crop',
     label: '03',
-    tag: 'After hours',
+    tag: 'Fired to order',
     badge: 'bg-[#FF8FD8] text-[#2A1D54]',
-    rotate: -2.5,
+    rotate: -1.25,
     tapeRotate: -3,
-    name: 'Smoked Rosemary Negroni',
-    description: 'Gin, Campari, sweet vermouth, rosemary smoke.',
-    price: 16,
-    cta: 'SEE THE POUR',
+    name: 'Charred Tomato Pasta',
+    description: 'Hand-rolled pasta, charred tomato, basil oil, aged parmesan.',
+    price: 24,
+    cta: 'SEE THE DISH',
   },
 ]
 
@@ -59,7 +59,7 @@ function TapeStrip({ rotate = -4, className = '' }) {
   )
 }
 
-function DishCard({ dish, featured = false }) {
+function DishCard({ dish }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 28 }}
@@ -68,9 +68,7 @@ function DishCard({ dish, featured = false }) {
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       style={{ transform: `rotate(${dish.rotate}deg)` }}
-      className={`group relative bg-parchment p-3 pb-4 shadow-card sm:p-3.5 ${
-        featured ? 'lg:col-span-2 lg:row-span-2' : ''
-      }`}
+      className="group relative flex h-full flex-col bg-parchment p-3 pb-4 shadow-card sm:p-3.5"
     >
       <TapeStrip rotate={dish.tapeRotate} />
 
@@ -83,50 +81,54 @@ function DishCard({ dish, featured = false }) {
 
       <Link
         to="/menu"
-        className={`relative block overflow-hidden ${
-          featured ? 'h-48 sm:h-56 lg:h-full lg:min-h-[220px]' : 'h-32 sm:h-36'
-        }`}
+        className="relative block aspect-[4/3] overflow-hidden rounded-[2px]"
       >
-        <img
-          src={dish.image}
-          alt={dish.name}
-          loading="lazy"
-          className="h-full w-full object-cover grayscale-[15%] transition-all duration-[900ms] ease-soft group-hover:grayscale-0 group-hover:scale-[1.04]"
+        <video
+          src={dish.video}
+          poster={dish.poster}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="h-full w-full object-cover transition-transform duration-[900ms] ease-soft group-hover:scale-[1.04]"
         />
       </Link>
 
-      <div className="px-1 pt-3">
-        <p className="text-[0.65rem] font-bold uppercase tracking-wide2 text-wine">
+      <div className="flex flex-1 flex-col px-1 pt-4">
+        <span
+          style={heading}
+          className="-rotate-1 inline-block w-fit rounded-md bg-gold/20 px-2.5 py-1 text-[0.65rem] font-extrabold uppercase tracking-wide text-wine"
+        >
           {dish.tag}
-        </p>
+        </span>
         <h3
           style={heading}
-          className={`mt-1 font-extrabold leading-tight text-ink ${featured ? 'text-xl sm:text-2xl' : 'text-lg'}`}
+          className="mt-2.5 text-xl font-extrabold leading-tight text-ink sm:text-2xl"
         >
           {dish.name}
         </h3>
-        <p
-          className={`mt-1.5 font-medium text-char/75 ${
-            featured ? 'max-w-md text-[0.85rem] leading-relaxed' : 'text-[0.75rem] leading-snug'
-          }`}
-        >
+        <p className="mt-2 line-clamp-2 text-[0.85rem] leading-relaxed text-char/70">
           {dish.description}
         </p>
-        {dish.note && (
-          <p className="mt-2 font-display text-[0.82rem] italic text-char/55">{dish.note}</p>
-        )}
 
-        <div className="mt-3 flex items-baseline justify-between border-t border-char/15 pt-3">
-          <span style={heading} className="text-lg font-extrabold text-wine">
-            ${dish.price}
-          </span>
+        <div className="mt-4 flex flex-1 items-end justify-between border-t border-char/15 pt-3.5">
+          {dish.price != null ? (
+            <span
+              style={heading}
+              className="rounded-md bg-wine/10 px-2.5 py-1 text-base font-extrabold text-wine"
+            >
+              ${dish.price}
+            </span>
+          ) : (
+            <span />
+          )}
           <Link
             to="/menu"
-            className="group/link inline-flex items-center gap-1 text-[0.65rem] font-bold uppercase tracking-wide2 text-char/70 transition-colors hover:text-wine"
+            className="group/link inline-flex items-center gap-1 text-[0.7rem] font-bold uppercase tracking-wide2 text-char/70 transition-colors hover:text-wine"
           >
             {dish.cta}
             <ArrowRight
-              size={10}
+              size={11}
               className="transition-transform duration-300 group-hover/link:translate-x-1"
             />
           </Link>
@@ -150,7 +152,14 @@ export default function SignatureDishes() {
           className="relative rounded-[2rem] border border-char/10 bg-white px-6 py-14 shadow-soft sm:px-10 sm:py-16 lg:px-14"
         >
           <div className="relative z-10 mx-auto max-w-2xl text-center">
-            <p className="text-xs font-semibold uppercase tracking-wide2 text-wine">
+            {/* "House favorites" now uses the Hero's bold Baloo 2 wordmark
+                voice instead of thin tracked caps — bigger, chunkier,
+                extrabold, matching the big "LINA" weight/feel at kicker
+                scale. */}
+            <p
+              style={heading}
+              className="text-base font-extrabold uppercase tracking-wide text-wine sm:text-lg"
+            >
               House favorites
             </p>
             <h2
@@ -164,37 +173,35 @@ export default function SignatureDishes() {
             </p>
           </div>
 
-          <div className="relative z-10 mx-auto mt-10 grid max-w-4xl grid-cols-1 gap-x-8 gap-y-12 sm:mt-12 lg:grid-cols-3 lg:gap-x-10">
-            <DishCard dish={HERO_DISH} featured />
-            {SIDE_DISHES.map((dish) => (
+          <div className="relative z-10 mx-auto mt-10 grid max-w-5xl grid-cols-1 items-stretch gap-x-8 gap-y-14 sm:mt-12 sm:grid-cols-3">
+            {DISHES.map((dish) => (
               <DishCard key={dish.name} dish={dish} />
             ))}
           </div>
 
-          {/* Behind-the-flame box — clear gap above (mt-24) so it never touches
-              the Branzino description; darker ink panel with a gold border and
-              a soft radial glow behind the shaped video, plus a tape strip like
-              the dish cards so it reads as part of the same visual family
-              instead of a plain placeholder box. Shape size bumped up too. */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 mx-auto mt-24 max-w-4xl overflow-hidden rounded-[1.75rem] border border-gold/30 bg-ink px-6 py-12 shadow-soft sm:mt-28 sm:px-10 sm:py-14"
+            className="relative z-10 mx-auto mt-24 max-w-4xl overflow-hidden rounded-[1.75rem] border border-gold/40 bg-ink px-6 py-12 shadow-soft sm:mt-28 sm:px-10 sm:py-14"
           >
-            <TapeStrip rotate={-5} className="bg-parchment/80" />
+            <TapeStrip rotate={-5} className="bg-parchment/90" />
+            <div className="pointer-events-none absolute -left-16 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-gold/10 blur-3xl" />
+            <div className="pointer-events-none absolute -right-10 bottom-0 h-56 w-56 rounded-full bg-[#F4633A]/10 blur-3xl" />
 
-            {/* faint warm glow behind the shape, echoes Hero's coastal tint */}
-            <div className="pointer-events-none absolute -left-10 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-[#F4633A]/20 blur-3xl sm:h-80 sm:w-80" />
-
-            <div className="relative z-10 flex flex-col items-center gap-8 sm:flex-row sm:justify-center sm:gap-12">
-              <ShapedVideoCard
-                shape="burger"
-                videoSrc="/videos/lina-dish.mp4"
-                posterSrc="/images/lina-dish-poster.jpg"
-                className="!w-64 drop-shadow-2xl sm:!w-72 lg:!w-80"
-              />
+            <div className="relative z-10 flex flex-col items-center gap-10 sm:flex-row sm:justify-center sm:gap-14">
+              <div className="rounded-2xl bg-parchment p-2 shadow-card sm:p-2.5">
+                <video
+                  src="/videos/lina-dish.mp4"
+                  poster="/images/lina-dish-poster.jpg"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="h-56 w-72 rounded-xl object-cover sm:h-64 sm:w-80"
+                />
+              </div>
               <div className="max-w-xs text-center sm:text-left">
                 <span
                   style={heading}
@@ -216,7 +223,15 @@ export default function SignatureDishes() {
           </motion.div>
 
           <div className="relative z-10 mt-12 flex flex-col items-center sm:mt-14">
-            <Button variant="outlineDark" icon={ArrowRight} onClick={() => navigate('/menu')}>
+            <Button
+              variant="outlineDark"
+              icon={ArrowRight}
+              onClick={() => navigate('/menu')}
+              style={heading}
+              whileHover={{ x: 3, y: 3, rotate: 0 }}
+              whileTap={{ x: 4, y: 4, scale: 0.98 }}
+              className="-rotate-1 !rounded-xl !border-[3px] !border-[#2A1D54] !text-[0.85rem] !font-extrabold !uppercase !tracking-wide !shadow-[4px_4px_0_0_#2A1D54] transition-shadow duration-200 hover:!shadow-[1px_1px_0_0_#2A1D54]"
+            >
               Come hungry
             </Button>
           </div>

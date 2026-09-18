@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
@@ -7,13 +8,29 @@ import Button from '../ui/Button'
 // smaller scale so the two sections read as one voice, not two brands.
 const heading = { fontFamily: "'Baloo 2', sans-serif" }
 
+// Same pattern as the Hero video: autoplay/muted/loop, with a poster image
+// fallback for reduced-motion users or if the video fails to load.
+const ABOUT_VIDEO = '/videos/about-kitchen.mp4'
+const ABOUT_POSTER =
+  'https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=1400&auto=format&fit=crop'
+
 export default function About({ compact = false }) {
   const navigate = useNavigate()
+  const videoRef = useRef(null)
+  const [reducedMotion, setReducedMotion] = useState(false)
+
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setReducedMotion(query.matches)
+    const handler = (e) => setReducedMotion(e.matches)
+    query.addEventListener('change', handler)
+    return () => query.removeEventListener('change', handler)
+  }, [])
 
   return (
     <section className="relative overflow-hidden bg-parchment py-24 sm:py-32">
       <div className="container-page grid grid-cols-1 items-center gap-12 lg:grid-cols-[3fr_2fr] lg:gap-16">
-        {/* image â€” wide, landscape framing, with a small rotated sticker
+        {/* video — wide, landscape framing, with a small rotated sticker
             caption echoing the Hero's badge treatment */}
         <motion.div
           initial={{ opacity: 0, scale: 0.97 }}
@@ -23,11 +40,24 @@ export default function About({ compact = false }) {
           className="relative"
         >
           <div className="aspect-[4/3] overflow-hidden rounded-2xl shadow-card">
-            <img
-              src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=1400&auto=format&fit=crop"
-              alt="Chef preparing a dish in Lina's open kitchen"
-              className="h-full w-full object-cover"
-            />
+            {!reducedMotion ? (
+              <video
+                ref={videoRef}
+                className="h-full w-full object-cover"
+                src={ABOUT_VIDEO}
+                poster={ABOUT_POSTER}
+                autoPlay
+                loop
+                muted
+                playsInline
+              />
+            ) : (
+              <img
+                src={ABOUT_POSTER}
+                alt="Chef preparing a dish in Lina's open kitchen"
+                className="h-full w-full object-cover"
+              />
+            )}
           </div>
           <span
             className="absolute -bottom-4 -right-3 -rotate-3 rounded-lg bg-[#F4633A] px-4 py-1.5 text-sm font-extrabold uppercase text-[#FBF1E6] shadow-card sm:-right-4 sm:text-base"
@@ -37,7 +67,7 @@ export default function About({ compact = false }) {
           </span>
         </motion.div>
 
-        {/* copy â€” Baloo 2 heading, color badge row, then the same quiet
+        {/* copy — Baloo 2 heading, color badge row, then the same quiet
             body copy and CTA as before */}
         <div>
           <motion.div
@@ -114,7 +144,15 @@ export default function About({ compact = false }) {
             transition={{ duration: 0.6, delay: 0.26 }}
             className="mt-8"
           >
-            <Button variant="primary" icon={ArrowRight} onClick={() => navigate('/contact')}>
+            <Button
+              variant="primary"
+              icon={ArrowRight}
+              onClick={() => navigate('/contact')}
+              style={heading}
+              whileHover={{ x: 3, y: 3, rotate: 0 }}
+              whileTap={{ x: 4, y: 4, scale: 0.98 }}
+              className="-rotate-1 !rounded-xl !border-[3px] !border-[#2A1D54] !text-[0.85rem] !font-extrabold !uppercase !tracking-wide !shadow-[4px_4px_0_0_#2A1D54] transition-shadow duration-200 hover:!shadow-[1px_1px_0_0_#2A1D54]"
+            >
               Reserve a table
             </Button>
           </motion.div>

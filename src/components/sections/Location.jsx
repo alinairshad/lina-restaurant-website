@@ -4,6 +4,8 @@ import { MapPin, Clock, ArrowUpRight, Navigation } from 'lucide-react'
 import Button from '../ui/Button'
 import Ornament from '../ui/Ornament'
 
+const heading = { fontFamily: "'Baloo 2', sans-serif" }
+
 const hours = [
   ['Tue – Thu', '5:30pm – 10:00pm'],
   ['Fri – Sat', '5:30pm – 11:00pm'],
@@ -53,8 +55,25 @@ export default function Location() {
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         >
-          <p className="font-display text-lg italic text-wine">Find us</p>
-          <h2 className="mt-3 text-balance text-4xl leading-[1.1] text-ink sm:text-5xl">
+          {/* Sticker badges — matches the About section's "OPEN KITCHEN" / "RAW BAR" pattern,
+              so Location no longer feels like the odd one out in the page rhythm. */}
+          <div className="flex flex-wrap gap-2.5">
+            <span
+              style={heading}
+              className="-rotate-2 inline-block rounded-lg bg-[#C6E86B] px-3 py-1.5 text-xs font-extrabold uppercase tracking-wide text-[#2A1D54] border-2 border-[#2A1D54] shadow-[2px_2px_0px_#2A1D54]"
+            >
+              Waterfront
+            </span>
+            <span
+              style={heading}
+              className="rotate-1 inline-block rounded-lg bg-[#FF8FD8] px-3 py-1.5 text-xs font-extrabold uppercase tracking-wide text-[#2A1D54] border-2 border-[#2A1D54] shadow-[2px_2px_0px_#2A1D54]"
+            >
+              Easy Parking
+            </span>
+          </div>
+
+          <p className="mt-5 font-display text-lg italic text-wine">Find us</p>
+          <h2 className="mt-2 text-balance text-4xl leading-[1.1] text-ink sm:text-5xl">
             Dockside District
           </h2>
           <p className="mt-5 flex items-start gap-2.5 text-[1.05rem] leading-relaxed text-char/70">
@@ -81,9 +100,17 @@ export default function Location() {
             </Button>
           </div>
 
-          <div className="mt-12 overflow-hidden rounded-2xl border border-char/10 bg-white">
-            <div className="h-40 sm:h-48">
+          <div className="group mt-12 overflow-hidden rounded-2xl border border-char/10 bg-white transition-all duration-300 ease-soft hover:-translate-y-1 hover:shadow-card">
+            <div className="relative h-40 sm:h-48">
               <MapSketch />
+              {/* Small sticker pin accent, echoes the Baloo 2 badge family without overwhelming the sketch */}
+              <span
+                style={heading}
+                className="absolute right-4 top-4 -rotate-3 inline-flex items-center gap-1 rounded-lg bg-gold px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-ink border-2 border-[#2A1D54] shadow-[2px_2px_0px_#2A1D54] transition-transform duration-300 ease-soft group-hover:-translate-y-0.5"
+              >
+                <MapPin size={10} strokeWidth={2.5} />
+                Lina
+              </span>
             </div>
             <div className="flex items-center gap-2.5 border-t border-char/10 px-5 py-3.5 text-xs text-char/55">
               <Navigation size={13} className="text-wine" />
@@ -97,18 +124,29 @@ export default function Location() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="relative overflow-hidden rounded-2xl border border-char/10 bg-white p-8 shadow-card sm:p-10"
+          className="relative overflow-hidden rounded-2xl border border-char/10 bg-white p-8 shadow-card transition-all duration-300 ease-soft hover:-translate-y-1 hover:shadow-soft sm:p-10"
         >
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
 
-          <div className="flex items-center gap-3 text-ink">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gold/15">
-              <Clock size={15} className="text-wine" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 text-ink">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gold/15">
+                <Clock size={15} className="text-wine" />
+              </span>
+              <h3 className="text-sm font-semibold uppercase tracking-wide2">
+                Opening hours
+              </h3>
+            </div>
+
+            {/* Small sticker status chip — same family as the badges above, kept minimal here */}
+            <span
+              style={heading}
+              className="rotate-1 inline-block rounded-lg bg-[#C6E86B] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wide text-[#2A1D54] border-2 border-[#2A1D54] shadow-[2px_2px_0px_#2A1D54]"
+            >
+              Open tonight
             </span>
-            <h3 className="text-sm font-semibold uppercase tracking-wide2">
-              Opening hours
-            </h3>
           </div>
+
           <ul className="mt-7 space-y-4">
             {hours.map(([day, time]) => (
               <li
