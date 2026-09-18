@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import About from '../components/sections/About'
 import Gallery from '../components/sections/Gallery'
 import SectionHeading from '../components/ui/SectionHeading'
@@ -21,7 +21,15 @@ const team = [
   },
 ]
 
+// Full class strings (not built dynamically) so Tailwind's JIT picks them up.
+const CARD_TILTS = ['-rotate-1', 'rotate-1', '-rotate-1']
+const BADGE_TILTS = ['rotate-1', '-rotate-2', 'rotate-2']
+const BADGE_COLORS = ['bg-[#C6E86B]', 'bg-[#FF8FD8]', 'bg-[#F4633A]'] // lime, pink, orange
+
 export default function AboutPage() {
+  const reduceMotion = useReducedMotion()
+  const offsetY = reduceMotion ? 0 : 30
+
   return (
     <>
       <section className="relative flex h-[46vh] min-h-[340px] items-end overflow-hidden bg-ink">
@@ -62,25 +70,50 @@ export default function AboutPage() {
             align="center"
           />
 
-          <div className="mt-14 grid grid-cols-1 gap-10 sm:grid-cols-3">
+          <div className="mt-16 grid grid-cols-1 gap-x-10 gap-y-14 sm:grid-cols-3">
             {team.map((person, i) => (
+              // Outer wrapper handles the scroll reveal. Rotation lives on the
+              // inner card so Framer Motion's inline transform can't override it.
               <motion.div
                 key={person.name}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: offsetY }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.55, delay: i * 0.08 }}
-                className="text-center"
+                transition={{ duration: 0.55, delay: reduceMotion ? 0 : i * 0.08 }}
+                className="mx-auto w-full max-w-xs"
               >
-                <div className="mx-auto h-64 w-full max-w-[220px] overflow-hidden rounded-xl">
-                  <img
-                    src={person.img}
-                    alt={person.name}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <h3 className="mt-5 font-display text-xl text-parchment">{person.name}</h3>
-                <p className="mt-1 text-sm text-gold/80">{person.role}</p>
+                <article
+                  className={`group relative ${CARD_TILTS[i % 3]} rounded-2xl border-[3px] border-[#2A1D54] bg-parchment text-center shadow-[6px_6px_0_0_#2A1D54] transition-all duration-200 hover:translate-x-[4px] hover:translate-y-[4px] hover:rotate-0 hover:shadow-[2px_2px_0_0_#2A1D54]`}
+                >
+                  {/* Tape strip on some cards */}
+                  {i % 2 === 0 && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute -top-3 left-1/2 z-10 h-6 w-24 -translate-x-1/2 -rotate-3 border-2 border-[#2A1D54]/20 bg-gold/80"
+                    />
+                  )}
+
+                  {/* Photo + role sticker hanging off its bottom edge */}
+                  <div className="relative">
+                    <div className="overflow-hidden rounded-t-[13px] border-b-[3px] border-[#2A1D54]">
+                      <img
+                        src={person.img}
+                        alt={person.name}
+                        loading="lazy"
+                        className="aspect-[4/5] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
+                    <span
+                      className={`absolute -bottom-3 left-1/2 z-10 -translate-x-1/2 ${BADGE_TILTS[i % 3]} whitespace-nowrap rounded-lg border-2 border-[#2A1D54] ${BADGE_COLORS[i % 3]} px-3 py-1 text-xs font-extrabold uppercase text-[#2A1D54]`}
+                    >
+                      {person.role}
+                    </span>
+                  </div>
+
+                  <h3 className="px-4 pb-6 pt-8 font-display text-2xl font-extrabold uppercase leading-none tracking-tight text-ink">
+                    {person.name}
+                  </h3>
+                </article>
               </motion.div>
             ))}
           </div>
